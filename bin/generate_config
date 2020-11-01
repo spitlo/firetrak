@@ -5,10 +5,12 @@ set -eu
 # shellcheck source=../.env
 source .env
 
-static_filename="traefik.toml"
-dynamic_filename="traefik-dynamic.toml"
+STATIC_FILENAME="traefik.toml"
+DYNAMIC_FILENAME="traefik-dynamic.toml"
+PROJECTS="$(echo "$PROJECTS" | tr ' ' '\n' | sort -u | xargs)"
+declare -a projects=( $PROJECTS )
 
-cat > "$static_filename" << EOF
+cat > "$STATIC_FILENAME" << EOF
 [log]
   level = "ERROR"
   filePath = "log-file.log"
@@ -19,7 +21,7 @@ cat > "$static_filename" << EOF
 
 [providers]
   [providers.file]
-    filename = "$dynamic_filename"
+    filename = "$DYNAMIC_FILENAME"
 
 [api]
   dashboard = true
@@ -46,7 +48,7 @@ cat > "$static_filename" << EOF
 
 EOF
 
-cat > "$dynamic_filename" << EOF
+cat > "$DYNAMIC_FILENAME" << EOF
 [http]
   [http.middlewares.sslheader.headers.customrequestheaders]
     X-Forwarded-Proto = "https"
@@ -59,29 +61,29 @@ cat > "$dynamic_filename" << EOF
 
 EOF
 
-for i in "${!PROJECTS[@]}"; do
-  PROJECT="$i"
-  cat >> "$dynamic_filename" << EOF
-    [http.routers.$PROJECT]
-      rule = "Host(\`$PROJECT.$LOCAL_DOMAIN\`)"
-      service = "$PROJECT"
+for project in "${projects[@]}"; do
+  SLUG=${project%%:*}
+  cat >> "$DYNAMIC_FILENAME" << EOF
+    [http.routers.$SLUG]
+      rule = "Host(\`$SLUG.$LOCAL_DOMAIN\`)"
+      service = "$SLUG"
       entryPoints = ["https"]
-    [http.routers.$PROJECT.tls]
+    [http.routers.$SLUG.tls]
       certResolver = "default"
-    [[http.routers.$PROJECT.tls.domains]]
+    [[http.routers.$SLUG.tls.domains]]
       sans = ["*.$LOCAL_DOMAIN"]
 
 EOF
 done
 
-echo "  [http.services]" >> "$dynamic_filename"
+echo "  [http.services]" >> "$DYNAMIC_FILENAME"
 
-for i in "${!PROJECTS[@]}"; do
-  PROJECT="$i"
-  PORT="${PROJECTS[$i]}"
-  cat >> "$dynamic_filename" << EOF
-    [http.services.$PROJECT.loadbalancer]
-      [[http.services.$PROJECT.loadbalancer.servers]]
+for project in "${projects[@]}"; do
+  SLUG=${project%%:*}
+  PORT=${project##*:}
+  cat >> "$DYNAMIC_FILENAME" << EOF
+    [http.services.$SLUG.loadbalancer]
+      [[http.services.$SLUG.loadbalancer.servers]]
         url = "http://127.0.0.1:$PORT"
 
 EOF

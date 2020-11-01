@@ -2,3 +2,5 @@
 log-*.log
 tmp/
 traefik
+traefik*.toml
+acme.json

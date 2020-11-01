@@ -9,8 +9,8 @@ At the moment, this assumes your domain is managed by Digitalocean.
 ## Setup
 
 1. Clone this repo.
-1. Remove `.git` folder, and run `git init`.
 1. Make an A type DNS entry for your domain, with a `*.` prefix (e.g. `*.example.dev`) and point it to `127.0.0.1`.
+1. Add your credentials and preferences to a `.env` file as described below.
 
 ### Set up `.env`
 
@@ -23,10 +23,19 @@ You need a Digitalocean account with access to the dev domain (`LOCAL_DOMAIN`). 
 
 Add your dev domain as `LOCAL_DOMAIN` and your email as `EMAIL`.
 
-Under `declare -A PROJECTS`, add your projects in the format:
+Add your projects to `PROJECTS` in the format:
 
 ```bash
-projects[PROJECT_SLUG]=PROJECT_PORT
+PROJECT_SLUG:PROJECT_PORT
+```
+
+Example:
+
+```bash
+PROJECTS="\
+  my-project:8000 \
+  another-project:8001 \
+"
 ```
 
 ### Generate config files
@@ -53,4 +62,4 @@ All projects will now be available at `https://PROJECT_SLUG.LOCAL_DOMAIN`. You w
 
 ## Generated files
 
-There should be a couple of new files in the Firetrak root folder. Add them to git (maybe except `acme.json`) if you want to share your config with co-workers.
+There should be a couple of new files in the Firetrak root folder. They are ignored by Git. Share your `.env` file if you want to share your config with co-workers (but consider keeping your DO auth token for yourself, or at least remember that it’s not locked to this specific domain and can cause greata harm).
