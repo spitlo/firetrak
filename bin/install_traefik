@@ -16,7 +16,7 @@ if [[ -x "./traefik" ]]; then
     sed -E 's/[^0-9.]*([0-9.]*)[^0-9.]*/\1/'
   )"
   if [[ "$latest_version" == "$current_version" ]]; then
-    echo "Latest version already available, run bin/run_traefik to start."
+    echo "Latest version already available, run bin/run to start."
     exit
   else
     download="yes"
