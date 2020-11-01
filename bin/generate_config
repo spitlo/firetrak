@@ -19,7 +19,7 @@ cat > "$static_filename" << EOF
 
 [providers]
   [providers.file]
-    filename = "traefik-dynamic.toml"
+    filename = "$dynamic_filename"
 
 [api]
   dashboard = true
