@@ -27,7 +27,7 @@ fi
 
 if [[ "$download" == "yes" ]]; then
   filename="traefik_${latest_version}_darwin_amd64.tar.gz" # Mac only for now
-  curl -sOL "https://github.com/traefik/traefik/releases/download/${filename}"
+  curl -sOL "https://github.com/traefik/traefik/releases/download/${latest_version}/${filename}"
   mkdir -p tmp
   mv "$filename" tmp
   cd tmp && tar xzf "$filename" && mv traefik .. && cd ..
