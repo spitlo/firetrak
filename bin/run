@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -eu
+
+# shellcheck source=../.env
+source .env
+
+rm -f log-*.log
+
+if [[ -f acme.json ]]; then
+  ./traefik
+else
+  DO_AUTH_TOKEN="$DO_AUTH_TOKEN" ./traefik
+fi

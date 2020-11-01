@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -eu
+
+download="no"
+
+latest_version=$(
+  curl "https://api.github.com/repos/traefik/traefik/releases/latest" |
+    grep '"tag_name":' |
+    sed -E 's/.*"([^"]+)".*/\1/'
+)
+
+if [[ -x "./traefik" ]]; then
+  current_version="v$(
+    ./traefik version |
+    grep "Version:" |
+    sed -E 's/[^0-9.]*([0-9.]*)[^0-9.]*/\1/'
+  )"
+  if [[ "$latest_version" == "$current_version" ]]; then
+    echo "Latest version already available, run bin/run_traefik to start."
+    exit
+  else
+    download="yes"
+  fi
+else
+    download="yes"
+fi
+
+if [[ "$download" == "yes" ]]; then
+  filename="traefik_${latest_version}_darwin_amd64.tar.gz" # Mac only for now
+  curl -sOL "https://github.com/traefik/traefik/releases/download/${filename}"
+  mkdir -p tmp
+  mv "$filename" tmp
+  cd tmp && tar xzf "$filename" && mv traefik .. && cd ..
+fi

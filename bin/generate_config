@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2153
+set -eu
+
+# shellcheck source=../.env
+source .env
+
+static_filename="traefik.toml"
+dynamic_filename="traefik-dynamic.toml"
+
+cat > "$static_filename" << EOF
+[log]
+  level = "ERROR"
+  filePath = "log-file.log"
+
+[accessLog]
+  filePath =  "log-access.log"
+  bufferingSize =  100
+
+[providers]
+  [providers.file]
+    filename = "traefik-dynamic.toml"
+
+[api]
+  dashboard = true
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+    [entryPoints.http.http]
+      [entryPoints.http.http.redirections]
+        [entryPoints.http.http.redirections.entrypoint]
+          to = "https"
+          scheme = "https"
+  [entryPoints.https]
+    address = ":443"
+  [entryPoints.dashboard]
+    address = ":8088"
+
+[certificatesResolvers.default.acme]
+  email = "$EMAIL"
+  storage = "acme.json"
+  [certificatesResolvers.default.acme.dnsChallenge]
+    provider = "digitalocean"
+    delayBeforeCheck = 0
+
+EOF
+
+cat > "$dynamic_filename" << EOF
+[http]
+  [http.middlewares.sslheader.headers.customrequestheaders]
+    X-Forwarded-Proto = "https"
+  [http.routers]
+    [http.routers.dashboard]
+      rule = "Host(\`traefik.$LOCAL_DOMAIN\`)"
+      service = "api@internal"
+    [[http.routers.dashboard.tls.domains]]
+      sans = ["*.$LOCAL_DOMAIN"]
+
+EOF
+
+for i in "${!PROJECTS[@]}"; do
+  PROJECT="$i"
+  cat >> "$dynamic_filename" << EOF
+    [http.routers.$PROJECT]
+      rule = "Host(\`$PROJECT.$LOCAL_DOMAIN\`)"
+      service = "$PROJECT"
+      entryPoints = ["https"]
+    [http.routers.$PROJECT.tls]
+      certResolver = "default"
+    [[http.routers.$PROJECT.tls.domains]]
+      sans = ["*.$LOCAL_DOMAIN"]
+
+EOF
+done
+
+echo "  [http.services]" >> "$dynamic_filename"
+
+for i in "${!PROJECTS[@]}"; do
+  PROJECT="$i"
+  PORT="${PROJECTS[$i]}"
+  cat >> "$dynamic_filename" << EOF
+    [http.services.$PROJECT.loadbalancer]
+      [[http.services.$PROJECT.loadbalancer.servers]]
+        url = "http://127.0.0.1:$PORT"
+
+EOF
+done
