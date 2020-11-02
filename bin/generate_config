@@ -11,14 +11,6 @@ PROJECTS="$(echo "$PROJECTS" | tr ' ' '\n' | sort -u | xargs)"
 declare -a projects=( $PROJECTS )
 
 cat > "$STATIC_FILENAME" << EOF
-[log]
-  level = "ERROR"
-  filePath = "log-file.log"
-
-[accessLog]
-  filePath =  "log-access.log"
-  bufferingSize =  100
-
 [providers]
   [providers.file]
     filename = "$DYNAMIC_FILENAME"

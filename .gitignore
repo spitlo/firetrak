@@ -1,5 +1,4 @@
 .env
-log-*.log
 tmp/
 traefik
 traefik*.toml
