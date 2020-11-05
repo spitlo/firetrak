@@ -1,15 +1,15 @@
-# Firetrak
+# ☲ Firetrak
 
 Develop locally with real https certificates using [Traefik](https://traefik.io) and [Let’s Encrypt](https://letsencrypt.org/).
 
-When running Gatsby/node projects (and other projects that expose a single port we can reverse proxy to) you won't need Docker/Pilothouse/Nginx or whatever you use currently.
+When running Gatsby/Next/Django/node projects (and other projects that expose a single port we can reverse proxy to) you won’t need Docker/Pilothouse/Nginx or whatever you use currently to serve https locally. Also, you won’t need to add entries to your `hosts` file.
 
 At the moment, this assumes your domain is managed by Digitalocean.
 
 ## Setup
 
 1. Clone this repo.
-1. Make an A type DNS entry for your domain, with a `*.` prefix (e.g. `*.example.dev`) and point it to `127.0.0.1`.
+1. Make an A type DNS entry for your preferred dev domain, with a `*.` prefix (e.g. `*.local.example.dev`) and point it to `127.0.0.1`. This must be a real domain you own.
 1. Add your credentials and preferences to a `.env` file as described below.
 
 ### Set up `.env`
@@ -58,8 +58,8 @@ bin/install_traefik
 bin/run
 ```
 
-All projects will now be available at `https://PROJECT_SLUG.LOCAL_DOMAIN`. You will still need to start the project first.
+All projects will now be available at `https://PROJECT_SLUG.LOCAL_DOMAIN`. You will still need to start the projects first.
 
 ## Generated files
 
-There should be a couple of new files in the Firetrak root folder. They are ignored by Git. Share your `.env` file if you want to share your config with co-workers (but consider keeping your DO auth token for yourself, or at least remember that it’s not locked to this specific domain and can cause greata harm).
+There should be a couple of new files in the Firetrak root folder. They are ignored by Git. Share your `.env` file if you want to share your config with co-workers (but consider keeping your DO auth token for yourself, or at least remember that it’s not locked to this specific domain and can cause great harm).
