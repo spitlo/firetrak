@@ -77,5 +77,5 @@ This is tested on macOS Mojave 10.14.6 with GNU bash, version 5.0.18. It should 
 
 ## Todo
 
-- [] Consider splitting `.env` into '.private' and 'project' files.
-- [] Remove `.env-template` and create an init script that generates the above files?
+- [ ] Consider splitting `.env` into '.private' and 'project' files.
+- [ ] Remove `.env-template` and create an init script that generates the above files?
