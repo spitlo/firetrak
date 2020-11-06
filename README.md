@@ -74,3 +74,8 @@ Traefik’s dashboard will be available at https://traefik.LOCAL_DOMAIN/dashboar
 ## Compatibility
 
 This is tested on macOS Mojave 10.14.6 with GNU bash, version 5.0.18. It should be trivial to get it running on any system supported by Traefik.
+
+## Todo
+
+- [] Consider splitting `.env` into '.private' and 'project' files.
+- [] Remove `.env-template` and create an init script that generates the above files?
