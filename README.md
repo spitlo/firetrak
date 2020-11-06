@@ -9,7 +9,7 @@ At the moment, this assumes your domain is managed by Digitalocean.
 ## Setup
 
 1. Clone this repo.
-1. Make an A type DNS entry for your preferred dev domain, with a `*.` prefix (e.g. `*.local.example.dev`) and point it to `127.0.0.1`. This must be a real domain you own.
+1. Make a type A DNS record for your preferred dev domain, with a `*.` prefix (e.g. `*.local.example.dev`) and point it to `127.0.0.1`. This must be a real domain you own.
 1. Add your credentials and preferences to a `.env` file as described below.
 
 ### Set up `.env`
