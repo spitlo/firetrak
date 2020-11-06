@@ -4,7 +4,7 @@ Develop locally with real https certificates using [Traefik](https://traefik.io)
 
 When running Gatsby/Next/Django/node projects (and other projects that expose a single port we can reverse proxy to) you won’t need Docker/Pilothouse/Nginx or whatever you currently use to serve https locally. Also, you won’t need to add entries to your `hosts` file.
 
-At the moment, this assumes your domain is managed by Digitalocean.
+At the moment, Firetrak assumes your domain is managed by Digitalocean, but it should be pretty easy to extend it to work with any of the Traefik’s [supported providers](https://doc.traefik.io/traefik/https/acme/#providers).
 
 ## Setup
 
