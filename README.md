@@ -64,7 +64,8 @@ All projects will now be available at `https://PROJECT_SLUG.LOCAL_DOMAIN`. You w
 
 ## Generated files
 
-There should be a couple of new files in the Firetrak root folder. They are ignored by Git. Share your `.env` file if you want to share your config with co-workers (but consider keeping your DO auth token for yourself, or at least remember that it’s not locked to this specific domain and can cause great harm).
+There should be a couple of new files in the Firetrak root folder. They are ignored by Git, and should be kept local.
+If you want to share your config with co-workers, you can safely share the "Project variables" portion of your `.env` file.
 
 ## Dashboard
 
