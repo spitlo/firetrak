@@ -22,7 +22,7 @@ if [[ -x "./traefik" ]]; then
   )"
   echo -e "Installed version: ${YELLOW}$current_version${NC}"
   if [[ "$latest_version" == "$current_version" ]]; then
-    echo -e "${GREEN}Latest version already available, run bin/run to start.${NC}"
+    echo -e "${GREEN}Latest version already available.${NC}"
     exit
   else
     download="yes"

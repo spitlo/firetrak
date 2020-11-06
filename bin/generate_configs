@@ -2,8 +2,19 @@
 # shellcheck disable=SC2153
 set -eu
 
-# shellcheck source=../.env
-source .env
+# shellcheck source=./env.globals
+source bin/env.globals
+
+if [[ ! -f .private || ! -f projects ]]; then
+  echo -e "${RED}Error.${NC} Missing environment files."
+  echo "Please run bin/init"
+  exit 1
+fi
+
+# shellcheck source=../.private
+source .private
+# shellcheck source=../projects
+source projects
 
 STATIC_FILENAME="traefik.toml"
 DYNAMIC_FILENAME="traefik-dynamic.toml"

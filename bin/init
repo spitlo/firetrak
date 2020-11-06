@@ -4,38 +4,53 @@ set -eu
 # shellcheck source=./env.globals
 source bin/env.globals
 
-sites=""
-
-# echo "======================"
-echo -e "${GREEN}Welcome to the ${YELLOW}☲${ORANGE} Firetrak${GREEN} setup!${NC}"
+echo -e "${WHITE}Welcome to the ${YELLOW}☲ Firetrak${WHITE} setup!${NC}"
 echo "================================"
+
+if [[ -f .private || -f projects ]]; then
+  echo -e "${YELLOW}Warning.${NC} We found environment files."
+  echo "Continuing will overwrite these."
+  read -p "Are your sure? (y/N) " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Nn]$ ]]; then
+    echo "Ok, exiting!"
+    exit 1
+  fi
+fi
+
 echo "You will be asked a few questions to help you set up your project."
+echo "If you mistype anything, just press ctrl+c and start over."
+
 echo
 echo -e "${WHITE}Dev domain${NC}"
-echo " - Your local dev domain must be a domain you own, or a subdomain of one."
-echo " - Its DNS must be managed by Digitalocean."
-echo "If your dev domain is local.domain.dev, a site url will look like:"
+echo " - Your local dev domain must be a domain you own, or a subdomain of one"
+echo " - Its DNS must be managed by Digitalocean"
+echo "If your dev domain is local.domain.dev, a project url will look like:"
 echo -e "${BLUE}https://my-project.local.domain.dev${NC}"
-read -rp $'Enter your preferred dev domain \n>' dev_domain
+read -rp $'Enter your preferred dev domain \n>' local_domain
+
 echo
-echo -e "${WHITE}Local sites${NC}"
-echo "Now I need to know about your local sites."
-echo " - Each site has a slug and a port."
-echo " - The port shuld be different for all your projects."
+echo -e "${WHITE}Local projects${NC}"
+echo "Now I need to know about your local projects."
+echo " - Each project has a slug and a port"
+echo " - The port shuld be different for all your projects"
 echo "Enter a project in the format slug:port"
 echo "You can add as many as you want, but only one per line."
 echo "Just press enter if you are done."
-while read -rp ">" site; do
-  if [ -z "$site" ]; then
+projects=""
+while read -rp ">" project; do
+  if [ -z "$project" ]; then
     break
   fi
-  sites="$sites $site"
+  projects="$projects $project"
 done
+
 echo
 echo -e "${WHITE}Your email${NC}"
 echo "Let’s Encrypt needs your email address to issue a certificate."
 echo "Please use a real one."
 read -rp $'Enter your email \n>' email
+
 echo
 echo -e "${WHITE}Personal Access Token${NC}"
 echo "This is the last question, thanks for your patience."
@@ -45,9 +60,30 @@ echo "Here’s how to get one:"
 echo " - Go to your Digitalocean dashboard (https://cloud.digitalocean.com)"
 echo " - Under Account, click API and then 'Generate New Token'"
 echo " - Copy the generated token"
-read -rp $' - Paste it here: \n>' token
+read -rp $' - Paste it here: \n>' do_auth_token
 
-echo "$dev_domain"
-echo "$sites"
-echo "$email"
-echo "$token"
+echo
+echo "That’s all! Hang on while we generate your files."
+
+# Write variables to ./projects and ./.private
+echo "LOCAL_DOMAIN=$local_domain" > ./projects
+echo "PROJECTS=\"\\" >> ./projects
+# shellcheck disable=2206
+projects=( $projects )
+for project in "${projects[@]}"; do
+  echo "  $project \\" >> ./projects
+done
+echo "\"" >> ./projects
+echo "EMAIL=$email" > ./.private
+echo "DO_AUTH_TOKEN=$do_auth_token" >> ./.private
+
+echo "Generating configs..."
+bin/generate_configs
+
+echo
+echo "Downloading Traefik"
+bin/download_traefik
+
+echo -e "${GREEN}Congratulations!${NC}"
+echo "If you made it this far, you should be good to go."
+echo -e "Run ${YELLOW}bin/run${NC} and enjoy your new lightweight dev experience!"

@@ -1,5 +1,7 @@
 .env
+.private
+acme.json
+projects
 tmp/
 traefik
 traefik*.toml
-acme.json
