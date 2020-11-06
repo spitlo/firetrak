@@ -66,6 +66,10 @@ All projects will now be available at `https://PROJECT_SLUG.LOCAL_DOMAIN`. You w
 
 There should be a couple of new files in the Firetrak root folder. They are ignored by Git. Share your `.env` file if you want to share your config with co-workers (but consider keeping your DO auth token for yourself, or at least remember that it’s not locked to this specific domain and can cause great harm).
 
+## Dashboard
+
+Traefik’s dashboard will be available at https://traefik.LOCAL_DOMAIN/dashboard/. The trailing slash is required.
+
 ## Compatibility
 
 This is tested on macOS Mojave 10.14.6 with GNU bash, version 5.0.18. It should be trivial to get it running on any system supported by Traefik.
