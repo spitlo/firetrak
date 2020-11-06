@@ -19,7 +19,7 @@ cp .env-template .env
 $EDITOR .env
 ```
 
-You need a Digitalocean account with access to the dev domain (`LOCAL_DOMAIN`). Create an auth token and add it to the `.env`  file as `DO_AUTH_TOKEN`.
+You need a Digitalocean account with access to the dev domain (`LOCAL_DOMAIN`). Go to the [Digitalocean API settings](https://cloud.digitalocean.com/account/api/tokens), create a personal access token and add it to the `.env`  file as `DO_AUTH_TOKEN`.
 
 Add your dev domain as `LOCAL_DOMAIN` and your email as `EMAIL`.
 
