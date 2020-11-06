@@ -8,7 +8,9 @@ source .env
 STATIC_FILENAME="traefik.toml"
 DYNAMIC_FILENAME="traefik-dynamic.toml"
 PROJECTS="$(echo "$PROJECTS" | tr ' ' '\n' | sort -u | xargs)"
-declare -a projects=( $PROJECTS )
+
+# shellcheck disable=2206
+projects=( $PROJECTS )
 
 cat > "$STATIC_FILENAME" << EOF
 [providers]

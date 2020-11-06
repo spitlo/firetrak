@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 set -eu
 
+# shellcheck source=./env.globals
+source bin/env.globals
+
 download="no"
 
+echo -e "${YELLOW}Checking versions...${NC}"
 latest_version=$(
-  curl "https://api.github.com/repos/traefik/traefik/releases/latest" |
+  curl --silent "https://api.github.com/repos/traefik/traefik/releases/latest" |
     grep '"tag_name":' |
     sed -E 's/.*"([^"]+)".*/\1/'
 )
+echo -e "Latest version: ${YELLOW}$latest_version${NC}"
 
 if [[ -x "./traefik" ]]; then
   current_version="v$(
@@ -15,8 +20,9 @@ if [[ -x "./traefik" ]]; then
     grep "Version:" |
     sed -E 's/[^0-9.]*([0-9.]*)[^0-9.]*/\1/'
   )"
+  echo -e "Installed version: ${YELLOW}$current_version${NC}"
   if [[ "$latest_version" == "$current_version" ]]; then
-    echo "Latest version already available, run bin/run to start."
+    echo -e "${GREEN}Latest version already available, run bin/run to start.${NC}"
     exit
   else
     download="yes"
