@@ -15,32 +15,14 @@ source "$PRIVATE_FILE"
 # shellcheck source=../configs/projects
 source "$PROJECTS_FILE"
 
-generate_log_configs() {
-  local type="${1:-verbose}"
-  echo "TYPE: $type"
-  if [[ "$type" == "verybose" ]]; then
-    cat > configs/logging.toml << EOF
-[accessLog]
-  bufferingSize = 100
-EOF
-  fi
-
-  cat >> configs/logging.toml << EOF
-[log]
-  level = "DEBUG"
-EOF
-}
-
 USAGE="
 ${BROWN}Usage${NC}: $0 [FLAGS]
 
 ${BROWN}Flags${NC}:
-  [-v|--verbose]  More logging
-  [-vv|--verybose] Moar logging
+  [-v|--verbose]  Log requests
+  [-vv|--verybose] Log everything
 "
-
-# Remove old logging config
-rm -f configs/logging.toml
+CONFIG_FILE="configs/firetrak.toml"
 
 # Handle args
 for arg in "$@"; do
@@ -48,12 +30,10 @@ for arg in "$@"; do
     echo -e "$USAGE"
     exit 0
   elif [ "$arg" = "--verbose" ] || [ "$arg" = "-v" ]; then
-    # shellcheck disable=SC2119
-    generate_log_configs
+    CONFIG_FILE="configs/firetrak.v.toml"
     echo -e "${YELLOW}Running in verbose mode${NC}"
   elif [ "$arg" = "--verybose" ] || [ "$arg" = "-vv" ]; then
-    # shellcheck disable=SC2119
-    generate_log_configs verybose
+    CONFIG_FILE="configs/firetrak.vv.toml"
     echo -e "${YELLOW}Running in verybose mode${NC}"
   else
     echo "Unknown argument '$arg'"
@@ -64,12 +44,12 @@ done
 # Run Traefik
 case "$PROVIDER" in
   digitalocean)
-    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" bin/traefik --configfile configs/firetrak.toml
+    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" bin/traefik --configfile "$CONFIG_FILE"
     ;;
   #my-provider)
   #  PROVIDER_VAR_1="$PROVIDER_VAR_1" \
   #  PROVIDER_VAR_2="$PROVIDER_VAR_2" \
-  #  ANOTHER_PROVIDER_VAR="$ANOTHER_PROVIDER_VAR" ./traefik $FLAGS
+  #  ANOTHER_PROVIDER_VAR="$ANOTHER_PROVIDER_VAR" ./traefik --configfile "$CONFIG_FILE"
   #  ;;
   *)
     echo -e "${RED}Error!${NC} Unknown provider."

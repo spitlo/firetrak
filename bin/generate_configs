@@ -55,6 +55,22 @@ cat > "$CONFIG_FILENAME" << EOF
 
 EOF
 
+# Generate extra config files for different loggign levels
+# This is because using a config files disables flags,
+# and you can’t put logging directives in dynamic configs.
+cat "$CONFIG_FILENAME" > "configs/firetrak.v.toml"
+cat >> "configs/firetrak.v.toml" << EOF
+[accessLog]
+  bufferingSize = 100
+EOF
+cat "$CONFIG_FILENAME" > "configs/firetrak.vv.toml"
+cat >> "configs/firetrak.vv.toml" << EOF
+[accessLog]
+  bufferingSize = 100
+[log]
+  level = "DEBUG"
+EOF
+
 cat > "$PROJECTS_FILENAME" << EOF
 [http]
   [http.middlewares.sslheader.headers.customrequestheaders]
