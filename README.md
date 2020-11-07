@@ -23,7 +23,7 @@ All projects will now (hopefully) be available at `https://PROJECT_SLUG.LOCAL_DO
 
 ## Generated files
 
-There should be a couple of new files in the Firetrak root folder. They are ignored by Git, and should be kept local.
+There should be a couple of new files in the Firetrak `config` folder. They are ignored by Git, and should be kept local.
 If you want to share your config with co-workers, you can safely share your `configs/projects` file.
 
 ## Dashboard
@@ -53,11 +53,11 @@ There are four steps involved in adding a provider:
 1. Check to see if your ACME provider is supported by Traefik. There is [a list of supported providers](https://doc.traefik.io/traefik/https/acme/#providers) on the website.
 1. Add an executable file named after the `Provider Code` from the above list in the `bin/providers` directory. This file should ask for all the `Environment Variables` needed for the provider and print them to the file `$PRIVATE_FILE`. You can use `bin/providers/digitalocean` as a template.
 1. In `bin/init`, add the provider as an option in the `DNS provider` section.
-1. In `bin/run`, add the provider in the `Run Traefik` section. You need to add all the environment variables before the `./traefik` command. If the provider uses many variables, you can put them on multiple lines. See the commented example in the code.
+1. In `bin/run`, add the provider in the `Run Traefik` section. You need to add all the environment variables before the `bin/traefik` command. If the provider uses many variables, you can put them on multiple lines. See the commented example in the code.
 
 ## Todo
 
 - [x] Consider splitting `.env` into '.private' and 'project' files.
 - [x] Remove `.env-template` and create an init script that generates the above files?
 - [x] Add possibility to implement more ACME providers
-- [ ] Fix verbose and verybose mode
+- [x] Fix verbose and verybose mode
