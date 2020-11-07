@@ -4,28 +4,25 @@ set -eu
 # shellcheck source=./env.globals
 source bin/env.globals
 
-if [[ ! -f .private || ! -f projects ]]; then
+if [[ ! -d configs || ! -f "$PRIVATE_FILE" || ! -f "$PROJECTS_FILE" ]]; then
   echo -e "${RED}Error.${NC} Missing environment files."
   echo "Please run bin/init"
   exit 1
 fi
 
-# shellcheck source=../.private
-source .private
-# shellcheck source=../projects
-source projects
+# shellcheck source=../configs/.private
+source "$PRIVATE_FILE"
+# shellcheck source=../configs/projects
+source "$PROJECTS_FILE"
 
 USAGE="
 ${BROWN}Usage${NC}: $0 [FLAGS]
 
 ${BROWN}Flags${NC}:
-  [-v|--verbose]  More logging
-  [-vv|--verybose] Moar logging
+  [-v|--verbose]  Log requests
+  [-vv|--verybose] Log everything
 "
-
-FLAGS=""
-FLAGS_V="--accesslog=true --accesslog.bufferingsize=100 --log=true --log.level="
-FLAGS_VV="--providers.file.debugloggeneratedtemplate=true"
+CONFIG_FILE="configs/firetrak.toml"
 
 # Handle args
 for arg in "$@"; do
@@ -33,12 +30,11 @@ for arg in "$@"; do
     echo -e "$USAGE"
     exit 0
   elif [ "$arg" = "--verbose" ] || [ "$arg" = "-v" ]; then
-    FLAGS="$FLAGS ${FLAGS_V}ERROR"
+    CONFIG_FILE="configs/firetrak.v.toml"
     echo -e "${YELLOW}Running in verbose mode${NC}"
   elif [ "$arg" = "--verybose" ] || [ "$arg" = "-vv" ]; then
+    CONFIG_FILE="configs/firetrak.vv.toml"
     echo -e "${YELLOW}Running in verybose mode${NC}"
-    FLAGS="$FLAGS ${FLAGS_V}DEBUG $FLAGS_VV"
-    echo "$FLAGS"
   else
     echo "Unknown argument '$arg'"
     exit 0
@@ -48,13 +44,12 @@ done
 # Run Traefik
 case "$PROVIDER" in
   digitalocean)
-    # shellcheck disable=SC2086
-    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" bin/traefik $FLAGS
+    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" bin/traefik --configfile "$CONFIG_FILE"
     ;;
   #my-provider)
   #  PROVIDER_VAR_1="$PROVIDER_VAR_1" \
   #  PROVIDER_VAR_2="$PROVIDER_VAR_2" \
-  #  ANOTHER_PROVIDER_VAR="$ANOTHER_PROVIDER_VAR" ./traefik $FLAGS
+  #  ANOTHER_PROVIDER_VAR="$ANOTHER_PROVIDER_VAR" ./traefik --configfile "$CONFIG_FILE"
   #  ;;
   *)
     echo -e "${RED}Error!${NC} Unknown provider."
