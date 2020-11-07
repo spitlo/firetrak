@@ -8,8 +8,8 @@ At the moment, Firetrak supports domains managed by Digitalocean, but it should 
 
 ## Setup
 
-1. Clone or [download](https://github.com/spitlo/firetrak/releases/latest) this repo.
 1. Make a type A DNS record for your preferred dev domain, with a `*.` prefix (e.g. `*.local.example.dev`) and point it to `127.0.0.1`. This must be a real domain you own.
+1. Clone or [download](https://github.com/spitlo/firetrak/releases/latest) this repo and `cd` into the folder.
 1. Run `bin/init` and answer the questions.
 
 ## Run
@@ -19,7 +19,7 @@ bin/run
 ```
 
 The first time you run Firetrak, a certificate will be generated and saved in `acme.json`. Subsequent runs will be faster.
-All projects will now (hopefully) be available at `https://PROJECT_SLUG.LOCAL_DOMAIN`. You will still need to start the projects first.
+As long as you keep Firetrak running, all projects will now (hopefully) be available at `https://PROJECT_SLUG.LOCAL_DOMAIN`. You will still need to start the projects first.
 
 ### Generated files
 
@@ -40,7 +40,7 @@ This is tested on macOS Mojave 10.14.6 with GNU bash, version 5.0.18. It should 
 
 ## Rationale
 
-A lot of my projects at $WORK demand that we use https in development. In 2017 I got a [feature request](https://github.com/Pilothouse-App/Pilothouse/issues/93) implemented in [Pilothouse](https://www.pilothouse-app.org/) that allows for using it as a reverse proxy for local projects, and we have used it with success since. But it is mostly made for PHP development, depends on Docker, and downloads a bunch of containers to enable multiple versions of PHP. That’s ok on my work computer, but my laptop struggles with it. Also, Covid means more development done on the laptop, and since we don’t do much WordPress development anymore anyway, I felt it was time to look for a more lightweight solution. Hopefully, Firetrak is that.
+A lot of my projects at $WORK demand that we use https in development. In 2017 I got a [feature request](https://github.com/Pilothouse-App/Pilothouse/issues/93) implemented in [Pilothouse](https://www.pilothouse-app.org/) that allows for using it as a reverse proxy for local projects, and we have used it with success since. But Pilothouse is mostly made for PHP development, depends on Docker, and downloads a bunch of containers to enable multiple versions of PHP. That’s ok on my work computer, but my laptop struggles with it. Also, Covid means more development done on the laptop, and since we don’t do much WordPress development anymore anyway, I felt it was time to look for a more lightweight solution. Hopefully, Firetrak is that.
 
 ## Development
 
