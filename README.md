@@ -62,5 +62,4 @@ There are four steps involved in adding a provider:
 - [x] Add possibility to implement more ACME providers
 - [x] Fix verbose and verybose mode
 - [ ] Test with multiple users using the same dev domain (Will Let’s Encrypt allow it?)
-- [ ] Investigate socket.io certificate error
-
+- [x] ~~Investigate socket.io certificate error~~ Seems to work fine now
