@@ -47,14 +47,20 @@ done
 
 echo
 echo -e "${WHITE}DNS provider${NC}"
+echo "Pick the provider you use for your DNS. You will be asked a"
+echo "number of provider-specific questions."
 echo " 1. Digitalocean"
+# TODO: Add more providers here
 provider=""
 while [[ "$provider" = "" ]]; do
-  read -rp $'Enter the number your DNS provider \n>' provider_id
+  read -rp $'Enter the number of your DNS provider \n>' provider_id
   case "$provider_id" in
     1)
       provider="digitalocean"
       ;;
+    #2)
+    #  provider="my-provider"
+    #  ;;
     *)
       echo -e "${YELLOW}Please pick one of the existing providers.${NC}"
   esac
