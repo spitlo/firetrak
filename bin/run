@@ -45,15 +45,12 @@ for arg in "$@"; do
   fi
 done
 
-if [[ -f acme.json ]]; then
-  # shellcheck disable=SC2086
-  ./traefik $FLAGS
-else
-  # shellcheck disable=SC2086
-  if [[ "$PROVIDER" = "digitalocean" ]]; then
+case "$PROVIDER" in
+  digitalocean)
     DO_AUTH_TOKEN="$DO_AUTH_TOKEN" ./traefik $FLAGS
-  else
+    ;;
+
+  *)
     echo -e "${RED}Error!${NC} Unknown provider."
     exit 1
-  fi
-fi
+esac

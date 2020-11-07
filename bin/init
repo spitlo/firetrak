@@ -46,23 +46,25 @@ while read -rp ">" project; do
 done
 
 echo
-echo -e "${WHITE}Provider${NC}"
+echo -e "${WHITE}DNS provider${NC}"
 echo " 1. Digitalocean"
 provider=""
 while [[ "$provider" = "" ]]; do
-  read -rp $'Enter the number your preferred provider \n>' provider_id
-  if [[ "$provider_id" = "1" ]]; then
-    provider="digitalocean"
-  else
-    echo "Please pick one of the existing providers."
-  fi
+  read -rp $'Enter the number your DNS provider \n>' provider_id
+  case "$provider_id" in
+    1)
+      provider="digitalocean"
+      ;;
+    *)
+      echo -e "${YELLOW}Please pick one of the existing providers.${NC}"
+  esac
 done
 bin/providers/$provider
 
 echo
 echo "That’s all! Hang on while we generate your files."
 exit
-# Write variables to ./projects and ./.private
+# Write variables to ./projects
 echo "LOCAL_DOMAIN=$local_domain" > ./projects
 echo "PROJECTS=\" \\" >> ./projects
 echo "PROVIDER=$provider" >> ./projects
