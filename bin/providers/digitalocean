@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-# shellcheck source=./env.globals
+# shellcheck source=../env.globals
 source bin/env.globals
 
 echo
