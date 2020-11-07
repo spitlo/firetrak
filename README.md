@@ -18,6 +18,7 @@ At the moment, Firetrak assumes your domain is managed by Digitalocean, but it s
 bin/run
 ```
 
+The first time you run Firetrak, a certificate will be generated and saved in `acme.json`. Subsequent runs will be faster.
 All projects will now (hopefully) be available at `https://PROJECT_SLUG.LOCAL_DOMAIN`. You will still need to start the projects first.
 
 ## Generated files
