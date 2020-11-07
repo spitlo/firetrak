@@ -24,7 +24,7 @@ echo "If you mistype anything, just press ctrl+c and start over."
 echo
 echo -e "${WHITE}Dev domain${NC}"
 echo " - Your local dev domain must be a domain you own, or a subdomain of one"
-echo " - Its DNS must be managed by Digitalocean"
+echo " - Its DNS must be managed by a supported provider"
 echo "If your dev domain is local.domain.dev, a project url will look like:"
 echo -e "${BLUE}https://my-project.local.domain.dev${NC}"
 read -rp $'Enter your preferred dev domain \n>' local_domain
@@ -46,36 +46,34 @@ while read -rp ">" project; do
 done
 
 echo
-echo -e "${WHITE}Your email${NC}"
-echo "Let’s Encrypt needs your email address to issue a certificate."
-echo "Please use a real one."
-read -rp $'Enter your email \n>' email
-
-echo
-echo -e "${WHITE}Personal Access Token${NC}"
-echo "This is the last question, thanks for your patience."
-echo "We need a personal access token for Digitalocean."
-echo "It will be stored locally only, and ignored by Git."
-echo "Here’s how to get one:"
-echo " - Go to your Digitalocean dashboard (https://cloud.digitalocean.com)"
-echo " - Under Account, click API and then 'Generate New Token'"
-echo " - Copy the generated token"
-read -rp $' - Paste it here: \n>' do_auth_token
+echo -e "${WHITE}Provider${NC}"
+echo " 1. Digitalocean"
+provider=""
+while [[ "$provider" = "" ]]; do
+  read -rp $'Enter the number your preferred provider \n>' provider_id
+  if [[ "$provider_id" = "1" ]]; then
+    provider="digitalocean"
+  else
+    echo "Please pick one of the existing providers."
+  fi
+done
+bin/providers/$provider
 
 echo
 echo "That’s all! Hang on while we generate your files."
-
+exit
 # Write variables to ./projects and ./.private
 echo "LOCAL_DOMAIN=$local_domain" > ./projects
-echo "PROJECTS=\"\\" >> ./projects
+echo "PROJECTS=\" \\" >> ./projects
+echo "PROVIDER=$provider" >> ./projects
+
 # shellcheck disable=2206
 projects=( $projects )
 for project in "${projects[@]}"; do
   echo "  $project \\" >> ./projects
 done
 echo "\"" >> ./projects
-echo "EMAIL=$email" > ./.private
-echo "DO_AUTH_TOKEN=$do_auth_token" >> ./.private
+
 
 echo "Generating configs..."
 bin/generate_configs

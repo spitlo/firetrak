@@ -4,8 +4,16 @@ set -eu
 # shellcheck source=./env.globals
 source bin/env.globals
 
-# shellcheck source=../.env
-source .env
+if [[ ! -f .private || ! -f projects ]]; then
+  echo -e "${RED}Error.${NC} Missing environment files."
+  echo "Please run bin/init"
+  exit 1
+fi
+
+# shellcheck source=../.private
+source .private
+# shellcheck source=../projects
+source projects
 
 USAGE="
 ${BROWN}Usage${NC}: $0 [FLAGS]
@@ -42,5 +50,10 @@ if [[ -f acme.json ]]; then
   ./traefik $FLAGS
 else
   # shellcheck disable=SC2086
-  DO_AUTH_TOKEN="$DO_AUTH_TOKEN" ./traefik $FLAGS
+  if [[ "$PROVIDER" = "digitalocean" ]]; then
+    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" ./traefik $FLAGS
+  else
+    echo -e "${RED}Error!${NC} Unknown provider."
+    exit 1
+  fi
 fi
