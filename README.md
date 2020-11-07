@@ -21,12 +21,12 @@ bin/run
 The first time you run Firetrak, a certificate will be generated and saved in `acme.json`. Subsequent runs will be faster.
 All projects will now (hopefully) be available at `https://PROJECT_SLUG.LOCAL_DOMAIN`. You will still need to start the projects first.
 
-## Generated files
+### Generated files
 
 There should be a couple of new files in the Firetrak `config` folder. They are ignored by Git, and should be kept local.
 If you want to share your config with co-workers, you can safely share your `configs/projects` file.
 
-## Dashboard
+### Dashboard
 
 Traefik’s dashboard will be available at https://traefik.LOCAL_DOMAIN/dashboard/. The trailing slash is required.
 
@@ -34,7 +34,7 @@ Traefik’s dashboard will be available at https://traefik.LOCAL_DOMAIN/dashboar
 
 Let’s Encrypt allows 5 renewals per week, so if at all possible, avoid using the same dev domains in a team. If you see the error message `too many certificates already issued for exact set of domains`, you have hit the limit. Sorry.
 
-## Compatibility
+### Compatibility
 
 This is tested on macOS Mojave 10.14.6 with GNU bash, version 5.0.18. It should be trivial to get it running on any system supported by Traefik.
 
@@ -55,7 +55,7 @@ There are four steps involved in adding a provider:
 1. In `bin/init`, add the provider as an option in the `DNS provider` section.
 1. In `bin/run`, add the provider in the `Run Traefik` section. You need to add all the environment variables before the `bin/traefik` command. If the provider uses many variables, you can put them on multiple lines. See the commented example in the code.
 
-## Todo
+### Todo
 
 - [x] Consider splitting `.env` into '.private' and 'project' files.
 - [x] Remove `.env-template` and create an init script that generates the above files?
