@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -eu
+
+# shellcheck source=../env.globals
+source bin/env.globals
+
+echo
+echo -e "${WHITE}Your email${NC}"
+echo "Let’s Encrypt needs your email address to issue a certificate."
+echo "Please use a real one."
+read -rp $'Enter your email \n>' email
+
+echo
+echo -e "${WHITE}Personal Access Token${NC}"
+echo "This is the last question, thanks for your patience."
+echo "We need a personal access token for Digitalocean."
+echo "It will be stored locally only, and ignored by Git."
+echo "Here’s how to get one:"
+echo " - Go to your Digitalocean dashboard (https://cloud.digitalocean.com)"
+echo " - Under Account, click API and then 'Generate New Token'"
+echo " - Copy the generated token"
+read -rp $' - Paste it here: \n>' do_auth_token
+
+echo "EMAIL=$email" > ./.private
+echo "DO_AUTH_TOKEN=$do_auth_token" >> ./.private

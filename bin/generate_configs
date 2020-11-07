@@ -48,7 +48,7 @@ cat > "$STATIC_FILENAME" << EOF
   email = "$EMAIL"
   storage = "acme.json"
   [certificatesResolvers.default.acme.dnsChallenge]
-    provider = "digitalocean"
+    provider = "$PROVIDER"
     delayBeforeCheck = 0
 
 EOF
