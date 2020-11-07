@@ -63,7 +63,6 @@ bin/providers/$provider
 
 echo
 echo "That’s all! Hang on while we generate your files."
-exit
 # Write variables to ./projects
 echo "LOCAL_DOMAIN=$local_domain" > ./projects
 echo "PROJECTS=\" \\" >> ./projects
