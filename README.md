@@ -47,3 +47,4 @@ A lot of my projects at $WORK demand that we use https in development. In 2017 I
 - [x] Consider splitting `.env` into '.private' and 'project' files.
 - [x] Remove `.env-template` and create an init script that generates the above files?
 - [x] Add possibility to implement more ACME providers
+- [ ] Fix verbose and verybose mode

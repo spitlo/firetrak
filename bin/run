@@ -47,7 +47,7 @@ done
 
 case "$PROVIDER" in
   digitalocean)
-    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" ./traefik $FLAGS
+    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" bin/traefik $FLAGS
     ;;
 
   *)

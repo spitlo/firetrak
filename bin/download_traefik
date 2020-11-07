@@ -14,9 +14,9 @@ latest_version=$(
 )
 echo -e "Latest version: ${YELLOW}$latest_version${NC}"
 
-if [[ -x "./traefik" ]]; then
+if [[ -x "bin/traefik" ]]; then
   current_version="v$(
-    ./traefik version |
+    bin/traefik version |
     grep "Version:" |
     sed -E 's/[^0-9.]*([0-9.]*)[^0-9.]*/\1/'
   )"
@@ -36,5 +36,5 @@ if [[ "$download" == "yes" ]]; then
   curl -sOL "https://github.com/traefik/traefik/releases/download/${latest_version}/${filename}"
   mkdir -p tmp
   mv "$filename" tmp
-  cd tmp && tar xzf "$filename" && mv traefik .. && cd ..
+  cd tmp && tar xzf "$filename" && mv traefik ../bin/ && cd ..
 fi
