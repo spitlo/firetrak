@@ -45,11 +45,17 @@ for arg in "$@"; do
   fi
 done
 
+# Run Traefik
 case "$PROVIDER" in
   digitalocean)
+    # shellcheck disable=SC2086
     DO_AUTH_TOKEN="$DO_AUTH_TOKEN" ./traefik $FLAGS
     ;;
-
+  #my-provider)
+  #  PROVIDER_VAR_1="$PROVIDER_VAR_1" \
+  #  PROVIDER_VAR_2="$PROVIDER_VAR_2" \
+  #  ANOTHER_PROVIDER_VAR="$ANOTHER_PROVIDER_VAR" ./traefik $FLAGS
+  #  ;;
   *)
     echo -e "${RED}Error!${NC} Unknown provider."
     exit 1
