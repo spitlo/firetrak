@@ -4,8 +4,14 @@ set -eu
 # shellcheck source=./env.globals
 source bin/env.globals
 
-# shellcheck source=../.env
-source .env
+if [[ ! -f .private ]]; then
+  echo -e "${RED}Error.${NC} Missing environment files."
+  echo "Please run bin/init"
+  exit 1
+fi
+
+# shellcheck source=../.private
+source .private
 
 USAGE="
 ${BROWN}Usage${NC}: $0 [FLAGS]
