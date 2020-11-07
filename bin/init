@@ -65,9 +65,9 @@ echo
 echo "That’s all! Hang on while we generate your files."
 # Write variables to ./projects
 echo "LOCAL_DOMAIN=$local_domain" > ./projects
-echo "PROJECTS=\" \\" >> ./projects
 echo "PROVIDER=$provider" >> ./projects
-
+# Now write a list of projects
+echo "PROJECTS=\" \\" >> ./projects
 # shellcheck disable=2206
 projects=( $projects )
 for project in "${projects[@]}"; do
