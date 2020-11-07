@@ -8,7 +8,7 @@ At the moment, Firetrak supports domains managed by Digitalocean, but it should 
 
 ## Setup
 
-1. Clone or download this repo.
+1. Clone or [download](https://github.com/spitlo/firetrak/releases/latest) this repo.
 1. Make a type A DNS record for your preferred dev domain, with a `*.` prefix (e.g. `*.local.example.dev`) and point it to `127.0.0.1`. This must be a real domain you own.
 1. Run `bin/init` and answer the questions.
 
