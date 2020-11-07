@@ -4,16 +4,31 @@ set -eu
 # shellcheck source=./env.globals
 source bin/env.globals
 
-if [[ ! -f .private || ! -f projects ]]; then
+if [[ ! -d configs || ! -f configs/.private || ! -f configs/projects ]]; then
   echo -e "${RED}Error.${NC} Missing environment files."
   echo "Please run bin/init"
   exit 1
 fi
 
-# shellcheck source=../.private
-source .private
-# shellcheck source=../projects
-source projects
+# shellcheck source=../configs/.private
+source configs/.private
+# shellcheck source=../configs/projects
+source configs/projects
+
+generate_log_configs() {
+  type="${1:verbose}"
+  if [[ "$type" == "verybose" ]]; then
+    cat > configs/logging.toml << EOF
+[accessLog]
+  bufferingSize = 100
+EOF
+  fi
+
+  cat > configs/logging.toml << EOF
+[log]
+  level="DEBUG"
+EOF
+}
 
 USAGE="
 ${BROWN}Usage${NC}: $0 [FLAGS]
@@ -23,9 +38,8 @@ ${BROWN}Flags${NC}:
   [-vv|--verybose] Moar logging
 "
 
-FLAGS=""
-FLAGS_V="--accesslog=true --accesslog.bufferingsize=100 --log=true --log.level="
-FLAGS_VV="--providers.file.debugloggeneratedtemplate=true"
+# Remove old logging config
+rm -f configs/logging.toml
 
 # Handle args
 for arg in "$@"; do
@@ -33,12 +47,12 @@ for arg in "$@"; do
     echo -e "$USAGE"
     exit 0
   elif [ "$arg" = "--verbose" ] || [ "$arg" = "-v" ]; then
-    FLAGS="$FLAGS ${FLAGS_V}ERROR"
+    # shellcheck disable=SC2119
+    generate_log_configs
     echo -e "${YELLOW}Running in verbose mode${NC}"
   elif [ "$arg" = "--verybose" ] || [ "$arg" = "-vv" ]; then
-    echo -e "${YELLOW}Running in verybose mode${NC}"
-    FLAGS="$FLAGS ${FLAGS_V}DEBUG $FLAGS_VV"
-    echo "$FLAGS"
+    # shellcheck disable=SC2119
+    generate_log_configs verybose
   else
     echo "Unknown argument '$arg'"
     exit 0
@@ -47,7 +61,7 @@ done
 
 case "$PROVIDER" in
   digitalocean)
-    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" bin/traefik $FLAGS
+    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" bin/traefik
     ;;
 
   *)

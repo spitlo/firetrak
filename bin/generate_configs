@@ -5,19 +5,21 @@ set -eu
 # shellcheck source=./env.globals
 source bin/env.globals
 
-if [[ ! -f .private || ! -f projects ]]; then
+mkdir -p configs
+
+if [[ ! -f configs/.private || ! -f configs/projects ]]; then
   echo -e "${RED}Error.${NC} Missing environment files."
   echo "Please run bin/init"
   exit 1
 fi
 
-# shellcheck source=../.private
-source .private
-# shellcheck source=../projects
-source projects
+# shellcheck source=../configs/.private
+source configs/.private
+# shellcheck source=../configs/projects
+source configs/projects
 
-STATIC_FILENAME="traefik.toml"
-DYNAMIC_FILENAME="traefik-dynamic.toml"
+STATIC_FILENAME="configs/traefik.toml"
+PROJECTS_FILENAME="configs/projects.toml"
 PROJECTS="$(echo "$PROJECTS" | tr ' ' '\n' | sort -u | xargs)"
 
 # shellcheck disable=2206
@@ -26,7 +28,7 @@ projects=( $PROJECTS )
 cat > "$STATIC_FILENAME" << EOF
 [providers]
   [providers.file]
-    filename = "$DYNAMIC_FILENAME"
+    filename = "$PROJECTS_FILENAME"
 
 [api]
   dashboard = true
@@ -53,7 +55,7 @@ cat > "$STATIC_FILENAME" << EOF
 
 EOF
 
-cat > "$DYNAMIC_FILENAME" << EOF
+cat > "$PROJECTS_FILENAME" << EOF
 [http]
   [http.middlewares.sslheader.headers.customrequestheaders]
     X-Forwarded-Proto = "https"
@@ -68,7 +70,7 @@ EOF
 
 for project in "${projects[@]}"; do
   SLUG=${project%%:*}
-  cat >> "$DYNAMIC_FILENAME" << EOF
+  cat >> "$PROJECTS_FILENAME" << EOF
     [http.routers.$SLUG]
       rule = "Host(\`$SLUG.$LOCAL_DOMAIN\`)"
       service = "$SLUG"
@@ -81,12 +83,12 @@ for project in "${projects[@]}"; do
 EOF
 done
 
-echo "  [http.services]" >> "$DYNAMIC_FILENAME"
+echo "  [http.services]" >> "$PROJECTS_FILENAME"
 
 for project in "${projects[@]}"; do
   SLUG=${project%%:*}
   PORT=${project##*:}
-  cat >> "$DYNAMIC_FILENAME" << EOF
+  cat >> "$PROJECTS_FILENAME" << EOF
     [http.services.$SLUG.loadbalancer]
       [[http.services.$SLUG.loadbalancer.servers]]
         url = "http://127.0.0.1:$PORT"

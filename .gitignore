@@ -1,6 +1,4 @@
-.private
 acme.json
-projects
+configs/
 tmp/
 traefik
-traefik*.toml
