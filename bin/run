@@ -4,19 +4,20 @@ set -eu
 # shellcheck source=./env.globals
 source bin/env.globals
 
-if [[ ! -d configs || ! -f configs/.private || ! -f configs/projects ]]; then
+if [[ ! -d configs || ! -f "$PRIVATE_FILE" || ! -f "$PROJECTS_FILE" ]]; then
   echo -e "${RED}Error.${NC} Missing environment files."
   echo "Please run bin/init"
   exit 1
 fi
 
 # shellcheck source=../configs/.private
-source configs/.private
+source "$PRIVATE_FILE"
 # shellcheck source=../configs/projects
-source configs/projects
+source "$PROJECTS_FILE"
 
 generate_log_configs() {
-  type="${1:verbose}"
+  local type="${1:-verbose}"
+  echo "TYPE: $type"
   if [[ "$type" == "verybose" ]]; then
     cat > configs/logging.toml << EOF
 [accessLog]
@@ -24,9 +25,9 @@ generate_log_configs() {
 EOF
   fi
 
-  cat > configs/logging.toml << EOF
+  cat >> configs/logging.toml << EOF
 [log]
-  level="DEBUG"
+  level = "DEBUG"
 EOF
 }
 
@@ -53,6 +54,7 @@ for arg in "$@"; do
   elif [ "$arg" = "--verybose" ] || [ "$arg" = "-vv" ]; then
     # shellcheck disable=SC2119
     generate_log_configs verybose
+    echo -e "${YELLOW}Running in verybose mode${NC}"
   else
     echo "Unknown argument '$arg'"
     exit 0
@@ -62,7 +64,7 @@ done
 # Run Traefik
 case "$PROVIDER" in
   digitalocean)
-    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" bin/traefik
+    DO_AUTH_TOKEN="$DO_AUTH_TOKEN" bin/traefik --configfile configs/firetrak.toml
     ;;
   #my-provider)
   #  PROVIDER_VAR_1="$PROVIDER_VAR_1" \

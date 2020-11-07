@@ -4,10 +4,12 @@ set -eu
 # shellcheck source=./env.globals
 source bin/env.globals
 
+mkdir -p configs
+
 echo -e "${WHITE}Welcome to the ${YELLOW}☲ Firetrak${WHITE} setup!${NC}"
 echo "================================"
 
-if [[ -f .private || -f projects ]]; then
+if [[ -f "$PRIVATE_FILE" || -f "$PROJECTS_FILE" ]]; then
   echo -e "${YELLOW}Warning.${NC} We found environment files."
   echo "Continuing will overwrite these."
   read -p "Are your sure? (y/N) " -n 1 -r
@@ -69,17 +71,17 @@ bin/providers/$provider
 
 echo
 echo "That’s all! Hang on while we generate your files."
-# Write variables to ./projects
-echo "LOCAL_DOMAIN=$local_domain" > ./projects
-echo "PROVIDER=$provider" >> ./projects
+# Write variables to configs/projects
+echo "LOCAL_DOMAIN=$local_domain" > "$PROJECTS_FILE"
+echo "PROVIDER=$provider" >> "$PROJECTS_FILE"
 # Now write a list of projects
-echo "PROJECTS=\" \\" >> ./projects
+echo "PROJECTS=\" \\" >> "$PROJECTS_FILE"
 # shellcheck disable=2206
 projects=( $projects )
 for project in "${projects[@]}"; do
-  echo "  $project \\" >> ./projects
+  echo "  $project \\" >> "$PROJECTS_FILE"
 done
-echo "\"" >> ./projects
+echo "\"" >> "$PROJECTS_FILE"
 
 
 echo "Generating configs..."

@@ -18,17 +18,17 @@ source configs/.private
 # shellcheck source=../configs/projects
 source configs/projects
 
-STATIC_FILENAME="configs/traefik.toml"
+CONFIG_FILENAME="configs/firetrak.toml"
 PROJECTS_FILENAME="configs/projects.toml"
 PROJECTS="$(echo "$PROJECTS" | tr ' ' '\n' | sort -u | xargs)"
 
 # shellcheck disable=2206
 projects=( $PROJECTS )
 
-cat > "$STATIC_FILENAME" << EOF
+cat > "$CONFIG_FILENAME" << EOF
 [providers]
   [providers.file]
-    filename = "$PROJECTS_FILENAME"
+    directory = "configs"
 
 [api]
   dashboard = true
@@ -48,7 +48,7 @@ cat > "$STATIC_FILENAME" << EOF
 
 [certificatesResolvers.default.acme]
   email = "$EMAIL"
-  storage = "acme.json"
+  storage = "configs/acme.json"
   [certificatesResolvers.default.acme.dnsChallenge]
     provider = "$PROVIDER"
     delayBeforeCheck = 0
