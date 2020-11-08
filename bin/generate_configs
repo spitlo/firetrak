@@ -13,10 +13,10 @@ if [[ ! -f configs/.private || ! -f configs/projects ]]; then
   exit 1
 fi
 
-# shellcheck source=../configs/.private
-source configs/.private
-# shellcheck source=../configs/projects
-source configs/projects
+# shellcheck disable=1090
+source "$PRIVATE_FILE"
+# shellcheck disable=1090
+source "$PROJECTS_FILE"
 
 CONFIG_FILENAME="configs/firetrak.toml"
 PROJECTS_FILENAME="configs/projects.toml"

@@ -71,7 +71,7 @@ bin/providers/$provider
 
 echo
 echo "That’s all! Hang on while we generate your files."
-# Write variables to configs/projects
+# Write variables to $PROJECTS_FILE
 echo "LOCAL_DOMAIN=$local_domain" > "$PROJECTS_FILE"
 echo "PROVIDER=$provider" >> "$PROJECTS_FILE"
 # Now write a list of projects

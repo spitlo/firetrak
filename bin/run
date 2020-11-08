@@ -10,9 +10,9 @@ if [[ ! -d configs || ! -f "$PRIVATE_FILE" || ! -f "$PROJECTS_FILE" ]]; then
   exit 1
 fi
 
-# shellcheck source=../configs/.private
+# shellcheck disable=1090
 source "$PRIVATE_FILE"
-# shellcheck source=../configs/projects
+# shellcheck disable=1090
 source "$PROJECTS_FILE"
 
 USAGE="
