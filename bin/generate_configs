@@ -73,8 +73,10 @@ EOF
 
 cat > "$PROJECTS_FILENAME" << EOF
 [http]
-  [http.middlewares.sslheader.headers.customrequestheaders]
-    X-Forwarded-Proto = "https"
+  [http.middlewares]
+    [http.middlewares.test-compress.compress]
+    [http.middlewares.sslheader.headers.customrequestheaders]
+      X-Forwarded-Proto = "https"
   [http.routers]
     [http.routers.dashboard]
       rule = "Host(\`traefik.$LOCAL_DOMAIN\`)"
@@ -91,6 +93,7 @@ for project in "${projects[@]}"; do
       rule = "Host(\`$SLUG.$LOCAL_DOMAIN\`)"
       service = "$SLUG"
       entryPoints = ["https"]
+      middlewares = ["test-compress"]
     [http.routers.$SLUG.tls]
       certResolver = "default"
     [[http.routers.$SLUG.tls.domains]]
